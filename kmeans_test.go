@@ -11,7 +11,7 @@ import (
 
 // Test K-Means Algorithm in Iris Dataset
 func TestKmeans(t *testing.T) {
-	filePath, err := filepath.Abs("data/iris.csv")
+	filePath, err := filepath.Abs("fixtures/iris.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,22 +21,25 @@ func TestKmeans(t *testing.T) {
 	}
 
 	lines := strings.Split(string(content), "\n")
-	irisData := make([][]float64, len(lines))
-	irisLabels := make([]string, len(lines))
-	for ii, line := range lines {
+	irisData := make([]Observation, 0, len(lines))
+	for _, line := range lines {
 		vector := strings.Split(line, ",")
 		label := vector[len(vector)-1]
 		vector = vector[:len(vector)-1]
 		floatVector := make([]float64, len(vector))
-		for jj := range vector {
-			floatVector[jj], err = strconv.ParseFloat(vector[jj], 64)
+		for j := range vector {
+			floatVector[j], err = strconv.ParseFloat(vector[j], 64)
 		}
-		irisData[ii] = floatVector
-		irisLabels[ii] = label
+
+		irisData = append(irisData, Observation{
+			Point: floatVector,
+			Label: label,
+		})
 	}
+
 	threshold := 10
 	// Best Distance for Iris is Canberra Distance
-	labels, err := Kmeans(irisData, 3, CanberraDistance, threshold)
+	labels, err := Cluster(irisData, 3, CanberraDistance, threshold)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -209,10 +209,10 @@ func TestHammingDistance(t *testing.T) {
 	secondComputed, _ := HammingDistance(thirdVector, fourthVector)
 
 	if firstComputed != firstActual {
-		t.Errorf("\nComputed Hamming Distance: %f\nActual Hamming Distance: %f", firstComputed, firstActual)
+		t.Errorf("\nComputed Hamming Distance: %f\nActual Hamming Distance: %d", firstComputed, firstActual)
 	}
 	if secondComputed != secondActual {
-		t.Errorf("\nComputed Hamming Distance: %f\nActual Hmming Distance: %f", secondComputed, secondActual)
+		t.Errorf("\nComputed Hamming Distance: %f\nActual Hmming Distance: %d", secondComputed, secondActual)
 	}
 }
 
