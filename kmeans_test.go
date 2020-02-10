@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/kelindar/kmeans/distance"
 )
 
 // Test K-Means Algorithm in Iris Dataset
@@ -39,7 +41,7 @@ func TestKmeans(t *testing.T) {
 
 	threshold := 10
 	// Best Distance for Iris is Canberra Distance
-	labels, err := Cluster(irisData, 3, CanberraDistance, threshold)
+	labels, err := Cluster(irisData, 3, distance.Canberra, threshold)
 	if err != nil {
 		log.Fatal(err)
 	}

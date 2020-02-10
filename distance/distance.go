@@ -1,4 +1,4 @@
-package kmeans
+package distance
 
 /*
 This module provides common distance functions for measuring distance
@@ -19,7 +19,7 @@ import (
 	"math"
 )
 
-// Lp Norm of an array, given p >= 1
+// LPNorm of an array, given p >= 1
 func LPNorm(vector []float64, p float64) (float64, error) {
 	distance := 0.
 	for _, jj := range vector {
@@ -28,8 +28,8 @@ func LPNorm(vector []float64, p float64) (float64, error) {
 	return math.Pow(distance, 1/p), nil
 }
 
-// 1-norm distance (l_1 distance)
-func ManhattanDistance(firstVector, secondVector []float64) (float64, error) {
+// DistanceManhattan 1-norm distance (l_1 distance)
+func Manhattan(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += math.Abs(firstVector[ii] - secondVector[ii])
@@ -37,8 +37,8 @@ func ManhattanDistance(firstVector, secondVector []float64) (float64, error) {
 	return distance, nil
 }
 
-// 2-norm distance (l_2 distance)
-func EuclideanDistance(firstVector, secondVector []float64) (float64, error) {
+// Euclidean 2-norm distance (l_2 distance)
+func Euclidean(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += (firstVector[ii] - secondVector[ii]) * (firstVector[ii] - secondVector[ii])
@@ -46,15 +46,15 @@ func EuclideanDistance(firstVector, secondVector []float64) (float64, error) {
 	return math.Sqrt(distance), nil
 }
 
-// Higher weight for the points that are far apart
+// SquaredEuclidean Higher weight for the points that are far apart
 // Not a real metric as it does not obey triangle inequality
-func SquaredEuclideanDistance(firstVector, secondVector []float64) (float64, error) {
-	distance, err := EuclideanDistance(firstVector, secondVector)
+func SquaredEuclidean(firstVector, secondVector []float64) (float64, error) {
+	distance, err := Euclidean(firstVector, secondVector)
 	return distance * distance, err
 }
 
-// p-norm distance (l_p distance)
-func MinkowskiDistance(firstVector, secondVector []float64, p float64) (float64, error) {
+// Minkowski p-norm distance (l_p distance)
+func Minkowski(firstVector, secondVector []float64, p float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += math.Pow(math.Abs(firstVector[ii]-secondVector[ii]), p)
@@ -62,8 +62,8 @@ func MinkowskiDistance(firstVector, secondVector []float64, p float64) (float64,
 	return math.Pow(distance, 1/p), nil
 }
 
-// p-norm distance with weights (weighted l_p distance)
-func WeightedMinkowskiDistance(firstVector, secondVector, weightVector []float64, p float64) (float64, error) {
+// WeightedMinkowski p-norm distance with weights (weighted l_p distance)
+func WeightedMinkowski(firstVector, secondVector, weightVector []float64, p float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += weightVector[ii] * math.Pow(math.Abs(firstVector[ii]-secondVector[ii]), p)
@@ -71,8 +71,8 @@ func WeightedMinkowskiDistance(firstVector, secondVector, weightVector []float64
 	return math.Pow(distance, 1/p), nil
 }
 
-// infinity norm distance (l_inf distance)
-func ChebyshevDistance(firstVector, secondVector []float64) (float64, error) {
+// Chebyshev infinity norm distance (l_inf distance)
+func Chebyshev(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		if math.Abs(firstVector[ii]-secondVector[ii]) >= distance {
@@ -82,7 +82,7 @@ func ChebyshevDistance(firstVector, secondVector []float64) (float64, error) {
 	return distance, nil
 }
 
-func HammingDistance(firstVector, secondVector []float64) (float64, error) {
+func Hamming(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		if firstVector[ii] != secondVector[ii] {
@@ -92,7 +92,7 @@ func HammingDistance(firstVector, secondVector []float64) (float64, error) {
 	return distance, nil
 }
 
-func BrayCurtisDistance(firstVector, secondVector []float64) (float64, error) {
+func BrayCurtis(firstVector, secondVector []float64) (float64, error) {
 	numerator, denominator := 0., 0.
 	for ii := range firstVector {
 		numerator += math.Abs(firstVector[ii] - secondVector[ii])
@@ -101,7 +101,7 @@ func BrayCurtisDistance(firstVector, secondVector []float64) (float64, error) {
 	return numerator / denominator, nil
 }
 
-func CanberraDistance(firstVector, secondVector []float64) (float64, error) {
+func Canberra(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += (math.Abs(firstVector[ii]-secondVector[ii]) / (math.Abs(firstVector[ii]) + math.Abs(secondVector[ii])))
