@@ -16,6 +16,7 @@ implemented separately.
 */
 
 import (
+	"errors"
 	"math"
 )
 
@@ -28,7 +29,7 @@ func LPNorm(vector []float64, p float64) (float64, error) {
 	return math.Pow(distance, 1/p), nil
 }
 
-// DistanceManhattan 1-norm distance (l_1 distance)
+// Manhattan 1-norm distance (l_1 distance)
 func Manhattan(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
@@ -71,7 +72,7 @@ func WeightedMinkowski(firstVector, secondVector, weightVector []float64, p floa
 	return math.Pow(distance, 1/p), nil
 }
 
-// Chebyshev infinity norm distance (l_inf distance)
+// Chebyshev computes the Chebyshev distance between two points
 func Chebyshev(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
@@ -82,6 +83,7 @@ func Chebyshev(firstVector, secondVector []float64) (float64, error) {
 	return distance, nil
 }
 
+// Hamming computes the Hamming distance between two points
 func Hamming(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
@@ -92,6 +94,7 @@ func Hamming(firstVector, secondVector []float64) (float64, error) {
 	return distance, nil
 }
 
+// BrayCurtis computes the BrayCurtis distance between two points
 func BrayCurtis(firstVector, secondVector []float64) (float64, error) {
 	numerator, denominator := 0., 0.
 	for ii := range firstVector {
@@ -101,10 +104,32 @@ func BrayCurtis(firstVector, secondVector []float64) (float64, error) {
 	return numerator / denominator, nil
 }
 
+// Canberra computes the Canberra distance between two points
 func Canberra(firstVector, secondVector []float64) (float64, error) {
 	distance := 0.
 	for ii := range firstVector {
 		distance += (math.Abs(firstVector[ii]-secondVector[ii]) / (math.Abs(firstVector[ii]) + math.Abs(secondVector[ii])))
 	}
 	return distance, nil
+}
+
+// NormalizedIntersection computes the intersection between two histograms
+func NormalizedIntersection(a, b []float64) (float64, error) {
+	if len(a) != len(b) {
+		return 0, errors.New("distance: histograms must be of equal bin size")
+	}
+
+	var sum float64
+	for i := 0; i < len(a); i++ {
+		sum += math.Min(a[i], b[i])
+	}
+	sum = sum / math.Max(sumOf(a), sumOf(b))
+	return sum, nil
+}
+
+func sumOf(value []float64) (sum float64) {
+	for _, v := range value {
+		sum += v
+	}
+	return
 }

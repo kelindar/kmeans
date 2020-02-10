@@ -1,27 +1,23 @@
 package kmeans
 
 import (
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/kelindar/kmeans/distance"
+	"github.com/stretchr/testify/assert"
 )
 
 // Test K-Means Algorithm in Iris Dataset
 func TestKmeans(t *testing.T) {
 	filePath, err := filepath.Abs("fixtures/iris.csv")
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
+
 	content, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	assert.NoError(t, err)
 
 	lines := strings.Split(string(content), "\n")
 	irisData := make([]Observation, 0, len(lines))
@@ -62,4 +58,6 @@ func TestKmeans(t *testing.T) {
 			}
 		}
 	}
+
+	assert.True(t, misclassifiedOnes < 10)
 }

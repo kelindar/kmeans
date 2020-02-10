@@ -8,6 +8,7 @@ Test for Weighted Minkowski Distance should be improved
 */
 
 import (
+	"github.com/stretchr/testify/assert"
 	"math"
 	"testing"
 )
@@ -245,5 +246,25 @@ func TestCanberraDistance(t *testing.T) {
 	firstComputed, _ := Canberra(firstVector, secondVector)
 	if firstActual != firstComputed {
 		t.Errorf("Computed Canberra Distance: %f\n Actual Canberra Distance: %f", firstComputed, firstActual)
+	}
+}
+
+func TestHistogramIntersection(t *testing.T) {
+	hist1 := []float64{1, 2, 10, 50, 30, 5, 2, 0, 1, 1}
+	hist2 := []float64{1, 2, 5, 10, 50, 30, 3, 2, 1, 1}
+
+	{
+		_, err := NormalizedIntersection(hist1, []float64{0.0})
+		assert.Error(t, err)
+	}
+	{
+		v, err := NormalizedIntersection(hist1, hist1)
+		assert.NoError(t, err)
+		assert.Equal(t, 1.0, v)
+	}
+	{
+		v, err := NormalizedIntersection(hist1, hist2)
+		assert.NoError(t, err)
+		assert.Equal(t, 0.5428571428571428, v)
 	}
 }
