@@ -1,6 +1,7 @@
 package kmeans
 
 import (
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"log"
 	"path/filepath"
@@ -40,24 +41,23 @@ func TestKmeans(t *testing.T) {
 	}
 
 	threshold := 10
+
 	// Best Distance for Iris is Canberra Distance
-	labels, err := Cluster(irisData, 3, distance.Canberra, threshold)
-	if err != nil {
-		log.Fatal(err)
-	}
+	output, err := Cluster(irisData, 3, distance.Canberra, threshold)
+	assert.NoError(t, err)
 
 	misclassifiedOnes := 0
-	for ii, jj := range labels {
-		if ii < 50 {
-			if jj != 2 {
+	for i, v := range output {
+		if i < 50 {
+			if v.Cluster != 2 {
 				misclassifiedOnes++
 			}
-		} else if ii < 100 {
-			if jj != 1 {
+		} else if i < 100 {
+			if v.Cluster != 1 {
 				misclassifiedOnes++
 			}
 		} else {
-			if jj != 0 {
+			if v.Cluster != 0 {
 				misclassifiedOnes++
 			}
 		}
